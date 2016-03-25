@@ -1,8 +1,13 @@
+#include <cassert>
 #include <string>
 
 #include "DQM/DQMRenderPlugin.h"
-#include "TCanvas.h"
 
+#include "TCanvas.h"
+#include "TColor.h"
+#include "TH1F.h"
+#include "TH2F.h"
+#include "TStyle.h"
 
 class L1TStage2EMTFRenderPlugin : public DQMRenderPlugin {
 
@@ -15,7 +20,7 @@ class L1TStage2EMTFRenderPlugin : public DQMRenderPlugin {
     return false;
   }
 
-  virtual void preDraw(Tcanvas* c, const VisDQMObject& o, const VisDQMImgInfo&, VisDQMRenderInfo& r) {
+  virtual void preDraw(TCanvas* c, const VisDQMObject& o, const VisDQMImgInfo&, VisDQMRenderInfo&) {
     if (dynamic_cast<TH1F*>(o.object)) {
       preDrawTH1F(c, o);
     } else if (dynamic_cast<TH2F*>(o.object)) {
@@ -33,18 +38,19 @@ class L1TStage2EMTFRenderPlugin : public DQMRenderPlugin {
 
  private:
 
-  void preDrawTH1F(TCanvas*, const VisDQMObject& o) {}
+  void preDrawTH1F(TCanvas*, const VisDQMObject&) {}
 
   void preDrawTH2F(TCanvas*, const VisDQMObject& o) {
     TH2F* obj = dynamic_cast<TH2F*>(o.object);
     assert(obj);
 
+    gStyle->SetPalette(kTemperatureMap);
     obj->SetOption("colz");
   }
 
-  void postDrawTH1F(TCanvas*, const VisDQMObject& o) {}
+  void postDrawTH1F(TCanvas*, const VisDQMObject&) {}
 
-  void postDrawTH2F(TCanvas*, const VisDQMObject& o) {}
-}
+  void postDrawTH2F(TCanvas*, const VisDQMObject&) {}
+};
 
 static L1TStage2EMTFRenderPlugin instance;
