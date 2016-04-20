@@ -7,7 +7,6 @@
 #include "TColor.h"
 #include "TH1F.h"
 #include "TH2F.h"
-#include "TROOT.h"
 #include "TStyle.h"
 
 class L1TStage2EMTFRenderPlugin : public DQMRenderPlugin {
@@ -39,13 +38,9 @@ class L1TStage2EMTFRenderPlugin : public DQMRenderPlugin {
 
  private:
 
-  void preDrawTH1F(TCanvas* c, const VisDQMObject& o) {
+  void preDrawTH1F(TCanvas*, const VisDQMObject& o) {
     TH1F* obj = dynamic_cast<TH1F*>(o.object);
     assert(obj);
-
-    c->cd();
-    gStyle->SetOptStat("111110");
-    gROOT->ForceStyle();
 
     if (o.name.find("emtfTrackPt") != std::string::npos) {
       gPad->SetLogy(1);
@@ -56,21 +51,26 @@ class L1TStage2EMTFRenderPlugin : public DQMRenderPlugin {
     }
   }
 
-  void preDrawTH2F(TCanvas* c, const VisDQMObject& o) {
+  void preDrawTH2F(TCanvas*, const VisDQMObject& o) {
     TH2F* obj = dynamic_cast<TH2F*>(o.object);
     assert(obj);
 
-    c->cd();
-    gStyle->SetOptStat(10);
-    gROOT->ForceStyle();
-
-    obj->SetStats(1);
     obj->SetOption("colz");
   }
 
-  void postDrawTH1F(TCanvas*, const VisDQMObject&) {}
+  void postDrawTH1F(TCanvas*, const VisDQMObject& o) {
+    TH1F* obj = dynamic_cast<TH1F*>(o.object);
+    assert(obj);
 
-  void postDrawTH2F(TCanvas*, const VisDQMObject&) {}
+    gStyle->SetOptStat("111110");
+  }
+
+  void postDrawTH2F(TCanvas*, const VisDQMObject& o) {
+    TH2F* obj = dynamic_cast<TH2F*>(o.object);
+    assert(obj);
+
+    gStyle->SetOptStat(10);
+  }
 };
 
 static L1TStage2EMTFRenderPlugin instance;
