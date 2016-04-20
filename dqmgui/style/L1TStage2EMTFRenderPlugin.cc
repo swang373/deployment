@@ -62,7 +62,7 @@ class L1TStage2EMTFRenderPlugin : public DQMRenderPlugin {
     TH1F* obj = dynamic_cast<TH1F*>(o.object);
     assert(obj);
 
-    gStyle->SetOptStat("111110");
+    gStyle->SetOptStat(111110);
   }
 
   void postDrawTH2F(TCanvas*, const VisDQMObject& o) {
